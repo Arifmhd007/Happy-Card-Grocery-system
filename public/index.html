@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Cart</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+        if (localStorage.getItem('userRole') !== 'customer') window.location.href = 'login.html';
+        if (localStorage.getItem('darkMode') === 'enabled') document.documentElement.classList.add('dark-mode');
+    </script>
+</head>
+<body>
+    <div id="toast" class="toast hidden"></div>
+    <div id="confettiContainer"></div> 
+
+    <header>
+        <div class="logo">Happy Cart</div>
+        <input type="text" id="searchBar" placeholder="Search for groceries...">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="color: white; font-weight: bold; text-align: right; margin-right: 15px;">
+                <div id="userGreeting"></div>
+                <div style="font-size: 12px; color: #FFC72C;">🏅 <span id="happyPointsDisplay">0</span> Points</div>
+            </div>
+            <button id="themeToggle" class="secondary-btn">🌙</button>
+            <button id="profileBtn" class="secondary-btn">Profile</button>
+            <button id="myOrdersBtn" class="secondary-btn">Orders</button>
+            <button id="cartBtn">Tray (0)</button>
+            <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <section id="categoryGrid" class="category-grid"></section>
+        
+        <div class="filter-bar">
+            <h2>Products</h2>
+            <div class="filter-controls">
+                <label style="font-weight: bold; cursor: pointer;">
+                    <input type="checkbox" id="vegFilter"> 🟩 Veg Only
+                </label>
+                <select id="sortDropdown">
+                    <option value="default">Sort By</option>
+                    <option value="low">Price: Low to High</option>
+                    <option value="high">Price: High to Low</option>
+                    <option value="rating">Top Rated ⭐</option>
+                </select>
+            </div>
+        </div>
+        
+        <section id="productGrid" class="grid"></section>
+    </main>
+
+    <aside id="cartSidebar" class="hidden">
+        <h2>Your Tray</h2>
+        <div id="cartItems"></div>
+        <div class="cart-total">Total: ₹<span id="totalPrice">0.00</span></div>
+        <button id="checkoutBtn">Checkout</button>
+    </aside>
+
+    <div id="profileModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>My Profile</h2>
+            <input type="email" id="profEmail" placeholder="Email Address">
+            <input type="tel" id="profMobile" placeholder="Mobile Number">
+            <input type="text" id="profAddress" placeholder="Default Delivery Address">
+            <div class="modal-actions">
+                <button onclick="document.getElementById('profileModal').classList.add('hidden')" class="cancel-btn">Close</button>
+                <button id="saveProfileBtn" class="confirm-btn">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="myOrdersModal" class="modal hidden">
+        <div class="modal-content" style="width: 600px; max-height: 80vh; overflow-y: auto;">
+            <h2>My Order History</h2>
+            <div id="myOrdersList"></div>
+            <button onclick="document.getElementById('myOrdersModal').classList.add('hidden')" class="cancel-btn" style="width: 100%; margin-top: 20px;">Close</button>
+        </div>
+    </div>
+
+    <div id="checkoutModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Secure Checkout</h2>
+            <div id="modalOrderSummary" style="background: var(--bg-color); padding: 10px; border-radius: 5px; text-align: left; margin-bottom: 15px;"></div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="promoInput" placeholder="Promo Code (HAPPY10)" style="margin: 0; flex: 1;">
+                <button id="applyPromoBtn" class="secondary-btn" style="margin: 0;">Apply</button>
+            </div>
+            
+            <div style="display: flex; align-items: center; justify-content: space-between; background: #FFF9E6; color: #333; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px dashed #FFC72C;">
+                <span>Use Happy Points? (Max <span id="checkoutMaxPoints">0</span>)</span>
+                <button id="usePointsBtn" class="secondary-btn" style="margin:0; padding: 5px 10px;">Redeem</button>
+            </div>
+
+            <form id="checkoutForm" onsubmit="return false;">
+                <input type="email" id="custEmail" placeholder="Email Address" required>
+                <input type="tel" id="custMobile" placeholder="Mobile Number" required>
+                <input type="text" id="custAddress" placeholder="Full Delivery Address" required>
+                <select id="paymentMethod" required>
+                    <option value="" disabled selected>Select Payment Method</option>
+                    <option value="Online Payment (UPI/Netbanking)">Online Payment (UPI/Netbanking)</option>
+                    <option value="Credit/Debit Card">Credit/Debit Card</option>
+                    <option value="Cash on Delivery">Cash on Delivery</option>
+                </select>
+                <div class="modal-actions" style="margin-top: 20px;">
+                    <button onclick="document.getElementById('checkoutModal').classList.add('hidden')" class="cancel-btn">Cancel</button>
+                    <button id="proceedPaymentBtn" class="confirm-btn">Place Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="paymentGateway" class="payment-overlay hidden">
+        <div class="gateway-box">
+            <div class="spinner"></div>
+            <h2 id="gatewayStatus">Redirecting to Secure Gateway...</h2>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

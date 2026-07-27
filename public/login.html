@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Cart - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="login-body">
+    <div class="login-header">
+        <h1 class="logo" style="font-size: 40px; margin-bottom: 10px;">Happy Cart</h1>
+        <p style="color: white; font-weight: bold;">Fast, Fresh, Frictionless.</p>
+    </div>
+    <div class="auth-container">
+        <div class="auth-card customer-card">
+            <h2>🍟 Customer Portal</h2>
+            <input type="text" id="custUsername" placeholder="Username" required>
+            <input type="password" id="custPassword" placeholder="Password" required>
+            <div class="auth-actions">
+                <button class="login-btn" onclick="handleAuth('customer', 'login')">Login</button>
+                <button class="register-btn" onclick="handleAuth('customer', 'register')">Register</button>
+            </div>
+        </div>
+        <div class="auth-card admin-card">
+            <h2>🍔 Manager Portal</h2>
+            <input type="text" id="adminUsername" placeholder="Username" required>
+            <input type="password" id="adminPassword" placeholder="Password" required>
+            <div class="auth-actions">
+                <button class="login-btn" onclick="handleAuth('admin', 'login')">Login</button>
+                <button class="register-btn" onclick="handleAuth('admin', 'register')">Register</button>
+            </div>
+        </div>
+    </div>
+    <script src="login.js"></script>
+</body>
+
+</html>
